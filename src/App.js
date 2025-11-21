@@ -177,7 +177,7 @@ const useAcaCalculator = (inputs) => {
 
     setResults(newResults);
     setLoading(false);
-  }, [inputs]); // Re-run the entire calculation when any input changes
+  }, [householdSize, silverPremiumAge, individualSilverPremium, bronzeFactor, goldFactor, platinumFactor, premiumIncrease2026, fplIncrease2026, ptcType2026, planSelection2025, planSelection2026, householdPremiumFactor]); // Re-run the entire calculation when any input changes
 
   return { results, loading, error, householdPremiumFactor };
 };
