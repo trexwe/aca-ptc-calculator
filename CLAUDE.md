@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is the **ACA Premium Tax Credit (PTC) Calculator** - a React-based web application that helps users compare Affordable Care Act premium tax credits and net premiums between 2025 and 2026. The calculator models both Enhanced and Standard PTC rules to show how policy changes affect household healthcare costs across different income levels.
+This is the **ACA Premium Tax Credit (PTC) Calculator** - a React-based web application that helps users compare Affordable Care Act premium tax credits and net premiums between 2025 and 2026. The calculator models both **Enhanced PTCs** (American Rescue Plan Act 2021, extended through 2025 by Inflation Reduction Act 2022) and **Standard PTCs** (original ACA 2014 rules) to show how policy changes affect household healthcare costs across different income levels.
 
 **Live URL**: https://trexwe.github.io/aca-ptc-calculator
 
@@ -11,6 +11,17 @@ This is the **ACA Premium Tax Credit (PTC) Calculator** - a React-based web appl
 **License**: GNU General Public License v3.0 (GPL-3.0)
 
 **Purpose**: Educational tool for understanding how ACA subsidies work under different policy scenarios, allowing users to model the financial impact of premium increases, poverty line changes, and PTC policy changes.
+
+### Why This Calculator Matters
+
+**Enhanced Premium Tax Credits expire December 31, 2025.** Without Congressional action:
+- **4.8 million people** could lose health coverage in 2026
+- Subsidized enrollees face **114% average premium increase** ($888/year → $1,904/year)
+- The **"subsidy cliff" returns**: earning $1 over 400% FPL means losing all subsidies
+- **725,000 middle-income families** (400-500% FPL) completely lose eligibility
+- **Older adults** (50s-60s) face the steepest increases due to age-rated premiums
+
+This calculator helps individuals, families, advocates, and policymakers understand the real-world impact of these policy changes across different income levels, household sizes, and ages.
 
 ## Codebase Structure
 
@@ -39,7 +50,7 @@ This is the **ACA Premium Tax Credit (PTC) Calculator** - a React-based web appl
 ├── tailwind.config.js       # Tailwind CSS configuration
 ├── postcss.config.js        # PostCSS plugins (Tailwind + Autoprefixer)
 ├── .gitignore              # Git ignore patterns
-├── README.md               # Standard Create React App documentation
+├── README.md               # Comprehensive project documentation with policy context
 └── LICENSE                 # GPL-3.0 license text
 ```
 
@@ -289,22 +300,22 @@ Base amounts by household size (2025):
 
 #### 4. Income Brackets and Applicable Percentages
 
-**2025 Enhanced PTC** (also 2026 if extended):
+**Enhanced PTCs (2021-2025)** - American Rescue Plan Act / Inflation Reduction Act:
 - 0-150% FPL: 0% of income
 - 150-200% FPL: 0-2% of income
 - 200-250% FPL: 2-4% of income
 - 250-300% FPL: 4-6.5% of income
 - 300-400% FPL: 6.5-8.5% of income
-- 400%+ FPL: 8.5% of income (no subsidy cliff)
+- 400%+ FPL: 8.5% of income (no upper income limit - cliff eliminated)
 
-**2026 Standard PTC**:
+**Standard PTCs (2014-2020, reverts 2026 without extension)** - Original ACA rules:
 - 100-133% FPL: 2% of income
 - 133-150% FPL: 3% of income
 - 150-200% FPL: 4% of income
 - 200-250% FPL: 6.3% of income
 - 250-300% FPL: 8.05% of income
 - 300-400% FPL: 9.5% of income
-- 400%+ FPL: **NO SUBSIDY** (cliff)
+- 400%+ FPL: **NO SUBSIDY** (cliff returns - lose all assistance)
 
 **Code Reference**: `getApplicablePercentage()` in `src/App.js:47-68`
 
@@ -327,7 +338,7 @@ Net Premium = Full Premium - APTC
 
 ### Default Scenario Parameters
 
-The calculator loads with a realistic example scenario:
+The calculator loads with a realistic example scenario modeling the most critical comparison: **Enhanced PTCs (current 2025 rules) vs Standard PTCs (what happens in 2026 without Congressional extension)**:
 ```javascript
 householdSize: 4              // Family of 4
 silverPremiumAge: 40          // 40-year-old primary adult
@@ -335,12 +346,14 @@ individualSilverPremium: 400  // $400/month Silver premium at age 21
 bronzeFactor: 0.70           // Bronze is 70% of Silver
 goldFactor: 1.10             // Gold is 110% of Silver
 platinumFactor: 1.35         // Platinum is 135% of Silver
-premiumIncrease2026: 0.10    // 10% premium increase
-fplIncrease2026: 0.03        // 3% FPL increase
-ptcType2026: 'standard'      // Standard PTC (no extension)
+premiumIncrease2026: 0.10    // 10% premium increase (modeling market instability)
+fplIncrease2026: 0.03        // 3% FPL increase (typical annual adjustment)
+ptcType2026: 'standard'      // Standard PTC (models expiration scenario)
 planSelection2025: 'silver'  // Silver plan in 2025
 planSelection2026: 'silver'  // Silver plan in 2026
 ```
+
+**Note**: The default assumes Enhanced PTCs expire and revert to Standard rules in 2026. Users can toggle `ptcType2026` to 'enhanced' to model a Congressional extension scenario.
 
 **Code Reference**: `useState()` initialization in `src/App.js:373-385`
 

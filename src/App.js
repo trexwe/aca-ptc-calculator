@@ -190,11 +190,25 @@ const useAcaCalculator = (inputs) => {
 const Header = () => (
   <>
     <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-indigo-700 mb-2">
-      Example Scenario ACA Tax Credit Comparison Tool
+      ACA Premium Tax Credit Calculator
     </h1>
-    <p className="text-center text-lg text-gray-600 mb-8">
-      Compare example scenario monthly premium tax credits and net premiums for 2025 and 2026.
+    <p className="text-center text-lg text-gray-700 mb-2">
+      Compare Enhanced vs Standard Premium Tax Credits: 2025–2026
     </p>
+    <p className="text-center text-base text-gray-600 mb-6 max-w-4xl mx-auto">
+      Enhanced Premium Tax Credits expire December 31, 2025. See how your household's health insurance costs
+      could change across income levels if subsidies revert to original ACA rules.
+    </p>
+    <div className="text-center mb-8">
+      <a
+        href="https://github.com/trexwe/aca-ptc-calculator/blob/main/POLICY_BACKGROUND.md"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block text-sm text-indigo-600 hover:text-indigo-800 underline"
+      >
+        Learn why this matters →
+      </a>
+    </div>
   </>
 );
 
