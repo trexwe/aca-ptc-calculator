@@ -188,7 +188,7 @@ const useAcaCalculator = (inputs) => {
 // They don't contain complex logic, making them easy to read and reuse.
 
 const Header = () => (
-  <>
+  <header role="banner">
     <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-indigo-700 mb-2">
       ACA Premium Tax Credit Calculator
     </h1>
@@ -204,12 +204,13 @@ const Header = () => (
         href="https://github.com/trexwe/aca-ptc-calculator/blob/main/POLICY_BACKGROUND.md"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block text-sm text-indigo-600 hover:text-indigo-800 underline"
+        className="inline-block text-sm text-indigo-600 hover:text-indigo-800 underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded px-2 py-1"
+        aria-label="Learn more about policy background (opens in new tab)"
       >
         Learn why this matters →
       </a>
     </div>
-  </>
+  </header>
 );
 
 const InputPanel = ({ inputs, setInputs }) => {
@@ -221,61 +222,151 @@ const InputPanel = ({ inputs, setInputs }) => {
     if (id === 'premiumIncrease2026' || id === 'fplIncrease2026') {
       parsedValue = (parsedValue || 0) / 100;
     }
-    
+
     setInputs(prev => ({ ...prev, [id]: parsedValue || (isNumeric ? 0 : '') }));
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 p-6 bg-indigo-50 rounded-lg border border-indigo-200">
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 p-6 bg-indigo-50 rounded-lg border border-indigo-200"
+      role="region"
+      aria-label="Calculator input parameters"
+    >
       {/* Household Size */}
       <div>
         <label htmlFor="householdSize" className="block text-sm font-semibold text-gray-700 mb-1">Household Size</label>
-        <input id="householdSize" type="number" value={inputs.householdSize} onChange={handleInputChange} min="1" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
+        <input
+          id="householdSize"
+          type="number"
+          value={inputs.householdSize}
+          onChange={handleInputChange}
+          min="1"
+          aria-label="Household size - number of people in household"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        />
       </div>
       {/* Monthly Silver Premium */}
       <div>
         <label htmlFor="individualSilverPremium" className="block text-sm font-semibold text-gray-700 mb-1">Monthly Silver Premium (Age 21)</label>
-        <div className="relative"><div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">$</div>
-          <input id="individualSilverPremium" type="number" value={inputs.individualSilverPremium} onChange={handleInputChange} min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 pl-7 pr-2 py-2"/>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400" aria-hidden="true">$</div>
+          <input
+            id="individualSilverPremium"
+            type="number"
+            value={inputs.individualSilverPremium}
+            onChange={handleInputChange}
+            min="0"
+            aria-label="Monthly Silver plan premium for a 21-year-old in dollars"
+            aria-required="true"
+            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none pl-7 pr-2 py-3 text-base md:text-sm"
+          />
         </div>
       </div>
       {/* Primary Adult Age */}
       <div>
         <label htmlFor="silverPremiumAge" className="block text-sm font-semibold text-gray-700 mb-1">Primary Adult Age</label>
-        <input id="silverPremiumAge" type="number" value={inputs.silverPremiumAge} onChange={handleInputChange} min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
+        <input
+          id="silverPremiumAge"
+          type="number"
+          value={inputs.silverPremiumAge}
+          onChange={handleInputChange}
+          min="0"
+          max="100"
+          aria-label="Age of primary adult in household"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        />
       </div>
       {/* Metal Factors */}
       <div>
         <label htmlFor="bronzeFactor" className="block text-sm font-semibold text-gray-700 mb-1">Bronze Factor</label>
-        <input id="bronzeFactor" type="number" value={inputs.bronzeFactor} onChange={handleInputChange} step="0.01" min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
+        <input
+          id="bronzeFactor"
+          type="number"
+          value={inputs.bronzeFactor}
+          onChange={handleInputChange}
+          step="0.01"
+          min="0"
+          aria-label="Bronze plan premium as a factor of Silver premium (typically 0.70)"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        />
       </div>
       <div>
         <label htmlFor="goldFactor" className="block text-sm font-semibold text-gray-700 mb-1">Gold Factor</label>
-        <input id="goldFactor" type="number" value={inputs.goldFactor} onChange={handleInputChange} step="0.01" min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
+        <input
+          id="goldFactor"
+          type="number"
+          value={inputs.goldFactor}
+          onChange={handleInputChange}
+          step="0.01"
+          min="0"
+          aria-label="Gold plan premium as a factor of Silver premium (typically 1.10)"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        />
       </div>
       <div>
         <label htmlFor="platinumFactor" className="block text-sm font-semibold text-gray-700 mb-1">Platinum Factor</label>
-        <input id="platinumFactor" type="number" value={inputs.platinumFactor} onChange={handleInputChange} step="0.01" min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
+        <input
+          id="platinumFactor"
+          type="number"
+          value={inputs.platinumFactor}
+          onChange={handleInputChange}
+          step="0.01"
+          min="0"
+          aria-label="Platinum plan premium as a factor of Silver premium (typically 1.35)"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        />
       </div>
       {/* 2026 Increases */}
       <div>
         <label htmlFor="premiumIncrease2026" className="block text-sm font-semibold text-gray-700 mb-1">2026 Premium Increase (%)</label>
         <div className="relative">
-          <input id="premiumIncrease2026" type="number" value={inputs.premiumIncrease2026 * 100} onChange={handleInputChange} step="1" min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">%</div>
+          <input
+            id="premiumIncrease2026"
+            type="number"
+            value={inputs.premiumIncrease2026 * 100}
+            onChange={handleInputChange}
+            step="1"
+            min="0"
+            aria-label="Expected premium increase from 2025 to 2026 in percent"
+            aria-required="true"
+            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+          />
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400" aria-hidden="true">%</div>
         </div>
       </div>
       <div>
         <label htmlFor="fplIncrease2026" className="block text-sm font-semibold text-gray-700 mb-1">2026 FPL Change (%)</label>
         <div className="relative">
-          <input id="fplIncrease2026" type="number" value={inputs.fplIncrease2026 * 100} onChange={handleInputChange} step="1" min="0" className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"/>
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">%</div>
+          <input
+            id="fplIncrease2026"
+            type="number"
+            value={inputs.fplIncrease2026 * 100}
+            onChange={handleInputChange}
+            step="1"
+            min="0"
+            aria-label="Expected Federal Poverty Line increase from 2025 to 2026 in percent"
+            aria-required="true"
+            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+          />
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400" aria-hidden="true">%</div>
         </div>
       </div>
       {/* 2026 PTC Type */}
       <div>
         <label htmlFor="ptcType2026" className="block text-sm font-semibold text-gray-700 mb-1">2026 PTC Type</label>
-        <select id="ptcType2026" value={inputs.ptcType2026} onChange={handleInputChange} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+        <select
+          id="ptcType2026"
+          value={inputs.ptcType2026}
+          onChange={handleInputChange}
+          aria-label="Premium Tax Credit type for 2026 - Standard or Enhanced"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        >
           <option value="standard">Standard PTC</option>
           <option value="enhanced">Enhanced PTC (If Extended)</option>
         </select>
@@ -283,14 +374,34 @@ const InputPanel = ({ inputs, setInputs }) => {
       {/* Plan Selections */}
       <div>
         <label htmlFor="planSelection2025" className="block text-sm font-semibold text-gray-700 mb-1">2025 Plan</label>
-        <select id="planSelection2025" value={inputs.planSelection2025} onChange={handleInputChange} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
-          <option value="bronze">Bronze</option><option value="silver">Silver</option><option value="gold">Gold</option><option value="platinum">Platinum</option>
+        <select
+          id="planSelection2025"
+          value={inputs.planSelection2025}
+          onChange={handleInputChange}
+          aria-label="Health insurance plan metal tier for 2025"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        >
+          <option value="bronze">Bronze</option>
+          <option value="silver">Silver</option>
+          <option value="gold">Gold</option>
+          <option value="platinum">Platinum</option>
         </select>
       </div>
       <div>
         <label htmlFor="planSelection2026" className="block text-sm font-semibold text-gray-700 mb-1">2026 Plan</label>
-        <select id="planSelection2026" value={inputs.planSelection2026} onChange={handleInputChange} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
-          <option value="bronze">Bronze</option><option value="silver">Silver</option><option value="gold">Gold</option><option value="platinum">Platinum</option>
+        <select
+          id="planSelection2026"
+          value={inputs.planSelection2026}
+          onChange={handleInputChange}
+          aria-label="Health insurance plan metal tier for 2026"
+          aria-required="true"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none p-3 text-base md:text-sm"
+        >
+          <option value="bronze">Bronze</option>
+          <option value="silver">Silver</option>
+          <option value="gold">Gold</option>
+          <option value="platinum">Platinum</option>
         </select>
       </div>
     </div>
@@ -299,7 +410,7 @@ const InputPanel = ({ inputs, setInputs }) => {
 
 const PremiumsDisplay = ({ inputs, householdPremiumFactor }) => {
   const { individualSilverPremium, bronzeFactor, goldFactor, platinumFactor, premiumIncrease2026 } = inputs;
-  
+
   const premiums2025 = {
     bronze: individualSilverPremium * bronzeFactor * householdPremiumFactor,
     silver: individualSilverPremium * householdPremiumFactor,
@@ -320,62 +431,120 @@ const PremiumsDisplay = ({ inputs, householdPremiumFactor }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 p-6 bg-gray-100 rounded-lg">
-      <div className="text-center md:col-span-2"><div className="text-sm text-gray-500">Calculated Household Premium Factor:<br/>{factorDescription()}</div></div>
-      <div className="p-4 bg-white rounded-lg shadow">
-        <h3 className="text-lg font-bold text-center text-gray-900 mb-2">2025 Monthly Premiums</h3>
-        <div className="space-y-2">
+    <section
+      className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 p-6 bg-gray-100 rounded-lg"
+      aria-label="Calculated monthly premiums"
+    >
+      <div className="text-center md:col-span-2">
+        <div className="text-sm text-gray-500" role="status" aria-live="polite">
+          Calculated Household Premium Factor:<br/>{factorDescription()}
+        </div>
+      </div>
+      <article className="p-4 bg-white rounded-lg shadow" aria-labelledby="premiums-2025">
+        <h3 id="premiums-2025" className="text-lg font-bold text-center text-gray-900 mb-2">2025 Monthly Premiums</h3>
+        <dl className="space-y-2">
           {Object.entries(premiums2025).map(([plan, premium]) => (
-            <div key={plan} className="flex justify-between"><span className="font-semibold capitalize">{plan}:</span><span>{formatCurrency(premium)}</span></div>
+            <div key={plan} className="flex justify-between">
+              <dt className="font-semibold capitalize">{plan}:</dt>
+              <dd>{formatCurrency(premium)}</dd>
+            </div>
           ))}
-        </div>
-      </div>
-      <div className="p-4 bg-white rounded-lg shadow">
-        <h3 className="text-lg font-bold text-center text-gray-900 mb-2">2026 Monthly Premiums</h3>
-        <div className="space-y-2">
+        </dl>
+      </article>
+      <article className="p-4 bg-white rounded-lg shadow" aria-labelledby="premiums-2026">
+        <h3 id="premiums-2026" className="text-lg font-bold text-center text-gray-900 mb-2">2026 Monthly Premiums</h3>
+        <dl className="space-y-2">
           {Object.entries(premiums2026).map(([plan, premium]) => (
-            <div key={plan} className="flex justify-between"><span className="font-semibold capitalize">{plan}:</span><span>{formatCurrency(premium)}</span></div>
+            <div key={plan} className="flex justify-between">
+              <dt className="font-semibold capitalize">{plan}:</dt>
+              <dd>{formatCurrency(premium)}</dd>
+            </div>
           ))}
-        </div>
-      </div>
-    </div>
+        </dl>
+      </article>
+    </section>
   );
 };
 
 const ResultsTable = ({ results, inputs }) => (
-  <div className="overflow-x-auto shadow-lg rounded-xl">
-    <table className="w-full text-sm text-left text-gray-500 rounded-xl">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-200 sticky top-0 z-10">
-        <tr>
-          <th rowSpan="2" className="px-3 py-4 text-center">FPL %</th>
-          <th colSpan="2" className="px-3 py-4 text-center">Annual Income</th>
-          <th colSpan="2" className="px-3 py-4 text-center">2025 (Enhanced PTC)</th>
-          <th colSpan="2" className="px-3 py-4 text-center">2026 ({inputs.ptcType2026 === 'standard' ? 'Standard' : 'Enhanced'} PTC)</th>
-          <th colSpan="2" className="px-3 py-4 text-center">Change in Monthly Net Premium ({inputs.planSelection2025} to {inputs.planSelection2026})</th>
-        </tr>
-        <tr>
-          <th className="px-3 py-2 text-center">2025</th><th className="px-3 py-2 text-center">2026</th>
-          <th className="px-3 py-2 text-center">Monthly APTC</th><th className="px-3 py-2 text-center">Monthly Net Premium ({inputs.planSelection2025})</th>
-          <th className="px-3 py-2 text-center">Monthly APTC</th><th className="px-3 py-2 text-center">Monthly Net Premium ({inputs.planSelection2026})</th>
-          <th className="px-3 py-2 text-center">Change ($)</th><th className="px-3 py-2 text-center">Change (%)</th>
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        {results.map((row, index) => (
-          <tr key={index} className="hover:bg-gray-100 transition-colors">
-            <td className="px-3 py-2 text-center font-medium text-gray-900">{row.fplPercent}%</td>
-            <td className="px-3 py-2 text-center">{formatCurrency(row.income2025)}</td>
-            <td className="px-3 py-2 text-center">{formatCurrency(row.income2026)}</td>
-            <td className="px-3 py-2 text-center">{formatCurrency(row.aptc2025)}</td>
-            <td className="px-3 py-2 text-center font-bold text-green-700">{formatCurrency(row.netPremium2025)}</td>
-            <td className="px-3 py-2 text-center">{formatCurrency(row.aptc2026)}</td>
-            <td className="px-3 py-2 text-center font-bold text-red-700">{formatCurrency(row.netPremium2026)}</td>
-            <td className="px-3 py-2 text-center font-bold">{formatCurrency(row.netChange)}</td>
-            <td className="px-3 py-2 text-center font-bold">{row.netChangePercent === Infinity ? 'N/A' : `${row.netChangePercent.toFixed(0)}%`}</td>
+  <div role="region" aria-label="Premium comparison results">
+    {/* Mobile scroll hint */}
+    <div className="md:hidden text-center text-sm text-gray-600 mb-2" aria-hidden="true">
+      ← Swipe to scroll table →
+    </div>
+    <div className="overflow-x-auto shadow-lg rounded-xl border border-gray-200 -mx-2 sm:mx-0">
+      <table
+        className="w-full text-sm text-left text-gray-500 rounded-xl min-w-[800px]"
+        role="table"
+        aria-label="Premium tax credit comparison across income levels for 2025 and 2026"
+      >
+        <thead className="text-xs text-gray-700 uppercase bg-gray-200 sticky top-0 z-10 shadow-sm">
+          <tr role="row">
+            <th
+              rowSpan="2"
+              scope="col"
+              className="px-4 py-4 text-center border-r border-gray-300 bg-gray-200 sticky left-0 z-20"
+              aria-label="Federal Poverty Level percentage"
+            >
+              FPL %
+            </th>
+            <th colSpan="2" scope="colgroup" className="px-3 py-4 text-center border-r border-gray-300">Annual Income</th>
+            <th colSpan="2" scope="colgroup" className="px-3 py-4 text-center border-r border-gray-300">2025 (Enhanced PTC)</th>
+            <th
+              colSpan="2"
+              scope="colgroup"
+              className="px-3 py-4 text-center border-r border-gray-300"
+            >
+              2026 ({inputs.ptcType2026 === 'standard' ? 'Standard' : 'Enhanced'} PTC)
+            </th>
+            <th colSpan="2" scope="colgroup" className="px-3 py-4 text-center">
+              Change in Monthly Net Premium ({inputs.planSelection2025} to {inputs.planSelection2026})
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+          <tr role="row">
+            <th scope="col" className="px-3 py-2 text-center border-r border-gray-300">2025</th>
+            <th scope="col" className="px-3 py-2 text-center border-r border-gray-300">2026</th>
+            <th scope="col" className="px-3 py-2 text-center">Monthly APTC</th>
+            <th scope="col" className="px-3 py-2 text-center border-r border-gray-300">Monthly Net Premium ({inputs.planSelection2025})</th>
+            <th scope="col" className="px-3 py-2 text-center">Monthly APTC</th>
+            <th scope="col" className="px-3 py-2 text-center border-r border-gray-300">Monthly Net Premium ({inputs.planSelection2026})</th>
+            <th scope="col" className="px-3 py-2 text-center">Change ($)</th>
+            <th scope="col" className="px-3 py-2 text-center">Change (%)</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {results.map((row, index) => (
+            <tr
+              key={index}
+              role="row"
+              className="hover:bg-gray-100 transition-colors focus-within:bg-gray-50"
+            >
+              <th
+                scope="row"
+                className="px-4 py-3 text-center font-medium text-gray-900 border-r border-gray-200 bg-gray-50 sticky left-0 z-10"
+                aria-label={`${row.fplPercent} percent of Federal Poverty Level`}
+              >
+                {row.fplPercent}%
+              </th>
+              <td className="px-3 py-3 text-center whitespace-nowrap">{formatCurrency(row.income2025)}</td>
+              <td className="px-3 py-3 text-center whitespace-nowrap border-r border-gray-200">{formatCurrency(row.income2026)}</td>
+              <td className="px-3 py-3 text-center whitespace-nowrap">{formatCurrency(row.aptc2025)}</td>
+              <td className="px-3 py-3 text-center font-bold text-green-700 whitespace-nowrap border-r border-gray-200">{formatCurrency(row.netPremium2025)}</td>
+              <td className="px-3 py-3 text-center whitespace-nowrap">{formatCurrency(row.aptc2026)}</td>
+              <td className="px-3 py-3 text-center font-bold text-red-700 whitespace-nowrap border-r border-gray-200">{formatCurrency(row.netPremium2026)}</td>
+              <td className="px-3 py-3 text-center font-bold whitespace-nowrap">{formatCurrency(row.netChange)}</td>
+              <td className="px-3 py-3 text-center font-bold whitespace-nowrap">
+                {row.netChangePercent === Infinity ? 'N/A' : `${row.netChangePercent.toFixed(0)}%`}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    {/* Mobile-friendly note */}
+    <p className="text-xs text-gray-500 mt-2 text-center md:text-left">
+      {results.length} income levels compared. Table scrolls horizontally on mobile devices.
+    </p>
   </div>
 );
 
@@ -403,22 +572,53 @@ export default function App() {
 
   return (
     <div className="bg-gray-50 text-gray-900 min-h-screen p-4 sm:p-8 font-sans">
+      {/* Skip Navigation for Accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Skip to main content
+      </a>
+      <a
+        href="#results"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-40 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Skip to results
+      </a>
+
       <div className="max-w-7xl mx-auto rounded-xl shadow-2xl overflow-hidden bg-white">
-        <div className="p-6 sm-p-10">
+        <main id="main-content" className="p-6 sm:p-10" role="main">
           <Header />
           <InputPanel inputs={inputs} setInputs={setInputs} />
           <PremiumsDisplay inputs={inputs} householdPremiumFactor={householdPremiumFactor} />
 
-          {error && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">{error}</div>}
-          
+          {error && (
+            <div
+              className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg border border-red-200"
+              role="alert"
+              aria-live="assertive"
+            >
+              <strong className="font-bold">Error: </strong>
+              <span>{error}</span>
+            </div>
+          )}
+
           {loading ? (
-            <div className="flex justify-center items-center h-40">
+            <div
+              className="flex flex-col justify-center items-center h-40"
+              role="status"
+              aria-live="polite"
+              aria-label="Calculating results"
+            >
               <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
+              <p className="mt-4 text-gray-600">Calculating premiums...</p>
             </div>
           ) : (
-            <ResultsTable results={results} inputs={inputs} />
+            <div id="results">
+              <ResultsTable results={results} inputs={inputs} />
+            </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
