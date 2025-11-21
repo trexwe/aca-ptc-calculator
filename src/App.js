@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // --- Constants and Static Data ---
 // By moving static data outside the component, we prevent it from being re-declared on every render.
@@ -548,6 +549,107 @@ const ResultsTable = ({ results, inputs }) => (
   </div>
 );
 
+const PremiumChart = ({ results, inputs }) => {
+  // Custom tooltip formatter for better UX
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-3 border border-gray-300 rounded-lg shadow-lg">
+          <p className="font-semibold text-gray-900 mb-2">{data.fplPercent}% FPL</p>
+          <p className="text-sm text-gray-700">
+            Annual Income: {formatCurrency(data.income2025)}
+          </p>
+          <p className="text-sm text-green-700 font-semibold">
+            2025 Net Premium: {formatCurrency(data.netPremium2025)}
+          </p>
+          <p className="text-sm text-red-700 font-semibold">
+            2026 Net Premium: {formatCurrency(data.netPremium2026)}
+          </p>
+          <p className="text-sm text-gray-600 mt-1 border-t border-gray-200 pt-1">
+            Change: {formatCurrency(data.netChange)} ({data.netChangePercent === Infinity ? 'N/A' : `${data.netChangePercent.toFixed(0)}%`})
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Format Y-axis values as currency
+  const formatYAxis = (value) => `$${value}`;
+
+  return (
+    <section
+      className="mt-8 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
+      aria-label="Visual chart of net premium comparison"
+    >
+      <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
+        Net Premium Comparison by Income Level
+      </h3>
+      <p className="text-sm text-gray-600 mb-4 text-center">
+        Monthly net premium after subsidies for {inputs.planSelection2025} (2025) and {inputs.planSelection2026} (2026) plans
+      </p>
+
+      <div className="w-full h-80 md:h-96" role="img" aria-label="Line chart showing net premium trends from 125% to 425% of Federal Poverty Level for 2025 and 2026">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={results}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <XAxis
+              dataKey="fplPercent"
+              label={{ value: 'Federal Poverty Level (%)', position: 'insideBottom', offset: -5 }}
+              stroke="#6b7280"
+              tick={{ fontSize: 12 }}
+            />
+            <YAxis
+              tickFormatter={formatYAxis}
+              label={{ value: 'Monthly Net Premium ($)', angle: -90, position: 'insideLeft' }}
+              stroke="#6b7280"
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend
+              wrapperStyle={{ paddingTop: '10px' }}
+              iconType="line"
+            />
+            <Line
+              type="monotone"
+              dataKey="netPremium2025"
+              stroke="#15803d"
+              strokeWidth={3}
+              name={`2025 Net Premium (${inputs.planSelection2025})`}
+              dot={{ fill: '#15803d', r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="netPremium2026"
+              stroke="#b91c1c"
+              strokeWidth={3}
+              name={`2026 Net Premium (${inputs.planSelection2026}${inputs.ptcType2026 === 'standard' ? ' - Standard PTC' : ' - Enhanced PTC'})`}
+              dot={{ fill: '#b91c1c', r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Explanatory note */}
+      <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+        <p className="text-xs text-gray-700">
+          <strong>Note:</strong> The lines show policy-accurate premium calculations at 25% FPL intervals.
+          Visible "kinks" represent actual changes in subsidy formulas at bracket boundaries (150%, 200%, 250%, 300%, 400% FPL).
+          {inputs.ptcType2026 === 'standard' && (
+            <span className="text-red-700 font-semibold"> The sharp increase at 400% FPL in 2026 represents the "subsidy cliff" where Standard PTC eligibility ends.</span>
+          )}
+        </p>
+      </div>
+    </section>
+  );
+};
+
 
 // --- Main App Component ---
 // The App component is now much simpler. Its main job is to manage the state
@@ -616,6 +718,7 @@ export default function App() {
           ) : (
             <div id="results">
               <ResultsTable results={results} inputs={inputs} />
+              <PremiumChart results={results} inputs={inputs} />
             </div>
           )}
         </main>
